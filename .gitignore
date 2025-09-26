@@ -207,3 +207,6 @@ marimo/_lsp/
 __marimo__/
 credentials.txt
 train(1).csv
+.artifact
+
+notebook/train (1).csv
