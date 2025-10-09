@@ -1,0 +1,41 @@
+columns:
+ - _id: object
+ - RhythmScore: float64
+ - AudioLoudness: float64
+ - VocalContent: float64
+ - AcousticQuality: float64
+ - InstrumentalScore: float64
+ - LivePerformanceLikelihood: float64
+ - MoodScore: float64
+ - TrackDurationMs: float64
+ - Energy: float64
+ - BeatsPerMinute: float64
+
+drop_columns: _id
+
+numerical_columns:
+ - RhythmScore
+ - AudioLoudness
+ - VocalContent
+ - AcousticQuality
+ - InstrumentalScore
+ - LivePerformanceLikelihood
+ - MoodScore
+ - TrackDurationMs
+ - Energy
+ - BeatsPerMinute
+
+num_features:
+ - RhythmScore
+ - AudioLoudness
+ - VocalContent
+ - AcousticQuality
+
+mm_columns:
+ - InstrumentalScore
+ - LivePerformanceLikelihood
+ - MoodScore
+ - TrackDurationMs
+ - Energy
+
+
