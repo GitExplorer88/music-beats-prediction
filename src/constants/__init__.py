@@ -2,7 +2,7 @@ import os
 import datetime
 
 
-TARGET_COLUMN= "Response"
+TARGET_COLUMN= "BeatsPerMinute"
 CURRENT_YEAR= datetime.date.today().year
 PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
 
@@ -43,5 +43,15 @@ FIT_INTERCEPT:bool= True
 COPY_X:bool= True
 N_JOBS:int=1
 POSITIVE:bool=False
+
+AWS_ACCESS_KEY_ID_ENV_KEY="AWS_ACCESS_KEY_ID"
+AWS_SECRET_ACCESS_KEY_ENV_KEY="AWS_SECRET_ACCESS_KEY"
+REGION_NAME="us-east-1"
+
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE:float= 0.02
+MODEL_BUCKET_NAME= "harharmahadev123"
+MODEL_PUSHER_S3_KEY="model-registery"
+MODEL_FILE_NAME="model.pkl"
+
 
 

@@ -44,3 +44,22 @@ class ModelTrainerConfig:
     copy_x:bool=COPY_X
     n_jobs:int= N_JOBS
     positive:bool= POSITIVE
+    
+@dataclass
+class ModelEvaluationConfig:
+    changed_threshold_score:float= MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE
+    bucket_name:str= MODEL_BUCKET_NAME
+    s3_model_key_path:str= MODEL_FILE_NAME
+    
+@dataclass
+class ModelPusherConfig:
+    bucket_name:str= MODEL_BUCKET_NAME
+    s3_model_key_path:str= MODEL_FILE_NAME
+    
+@dataclass
+class Beatspredictor:
+    model_file_path:str= MODEL_FILE_NAME
+    model_bucket_name:str= MODEL_BUCKET_NAME
+    
+    
+    
