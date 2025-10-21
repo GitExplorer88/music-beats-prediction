@@ -54,4 +54,5 @@ MODEL_PUSHER_S3_KEY="model-registery"
 MODEL_FILE_NAME="model.pkl"
 
 
-
+APP_HOST="0.0.0.0"
+APP_PORT=5000

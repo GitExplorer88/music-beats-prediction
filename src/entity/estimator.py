@@ -15,7 +15,7 @@ class MyModel:
     def predict(self,Dataframe:DataFrame):
         try:
             logging.info("Starting prediction process.")
-            transformed_features= self.preprocessing_object.transform(DataFrame)
+            transformed_features= self.preprocessing_object.transform(Dataframe)
             predictions= self.trained_model_object.predict(transformed_features)
             return predictions
         except Exception as e:

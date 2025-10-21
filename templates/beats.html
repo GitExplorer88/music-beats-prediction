@@ -1,0 +1,106 @@
+<!-- templates/vehicledata.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Beats Predictor — Violet Theme</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Beats Classifier</h1>
+      <div class="lead">Form bhar ke "Predict" dabao — result side panel mein dikh jayega.</div>
+
+      <form method="post" action="/" id="beatsForm">
+        <div class="form-grid">
+          <div class="form-row">
+            <label for="RhythmScore">Rhythm Score</label>
+            <input type="number" step="any" id="RhythmScore" name="RhythmScore" placeholder="e.g. 0.78" required />
+          </div>
+
+          <div class="form-row">
+            <label for="AudioLoudness">Audio Loudness</label>
+            <input type="number" step="any" id="AudioLoudness" name="AudioLoudness" placeholder="-12.3" required />
+          </div>
+
+          <div class="form-row">
+            <label for="VocalContent">Vocal Content</label>
+            <input type="number" step="any" id="VocalContent" name="VocalContent" placeholder="0 - 1" required />
+          </div>
+
+          <div class="form-row">
+            <label for="AcousticQuality">Acoustic Quality</label>
+            <input type="number" step="any" id="AcousticQuality" name="AcousticQuality" placeholder="e.g. 0.5" required />
+          </div>
+
+          <div class="form-row">
+            <label for="InstrumentalScore">Instrumental Score</label>
+            <input type="number" step="any" id="InstrumentalScore" name="InstrumentalScore" placeholder="e.g. 0.4" required />
+          </div>
+
+          <div class="form-row">
+            <label for="LivePerformanceLikelihood">Live Performance Likelihood</label>
+            <input type="number" step="any" id="LivePerformanceLikelihood" name="LivePerformanceLikelihood" placeholder="e.g. 0.2" required />
+          </div>
+
+          <div class="form-row">
+            <label for="MoodScore">Mood Score</label>
+            <input type="number" step="any" id="MoodScore" name="MoodScore" placeholder="e.g. 0.6" required />
+          </div>
+
+          <div class="form-row">
+            <label for="TrackDurationMs">Track Duration (ms)</label>
+            <input type="number" step="any" id="TrackDurationMs" name="TrackDurationMs" placeholder="e.g. 180000" required />
+          </div>
+
+          <div class="form-row full">
+            <label for="Energy">Energy</label>
+            <input type="number" step="any" id="Energy" name="Energy" placeholder="e.g. 0.9" required />
+          </div>
+
+        </div>
+
+        <div style="margin-top:12px;">
+          <button type="submit" class="btn" id="submitBtn">Predict</button>
+        </div>
+      </form>
+
+      <div class="footer">Made with 💜 — Violet theme</div>
+    </div>
+
+    <aside class="side">
+      <div id="resultArea">
+        {% if context %}
+          {% if context == "Response-Yes" %}
+            <div class="result-badge result-yes">Yes — Positive</div>
+            <div class="small">Model predicted: <strong>Yes</strong></div>
+            <div class="muted">(If you want to debug, check model logs / print input feature values.)</div>
+          {% elif context == "Response-No" %}
+            <div class="result-badge result-no">No — Negative</div>
+            <div class="small">Model predicted: <strong>No</strong></div>
+            <div class="muted">Try changing feature values and retrain if results seem off.</div>
+          {% else %}
+            <div class="result-badge">{{ context }}</div>
+          {% endif %}
+        {% else %}
+          <div class="result-badge">Awaiting Input</div>
+          <div class="small">Submit values to get prediction.</div>
+          <div class="muted">Tip: Use realistic ranges from your dataset for best results.</div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // small client-side nicety: disable button briefly on submit to avoid double submits
+    const form = document.getElementById('beatsForm');
+    const btn = document.getElementById('submitBtn');
+    form.addEventListener('submit', () => {
+      btn.disabled = true;
+      btn.innerText = 'Predicting...';
+    });
+  </script>
+</body>
+</html>
