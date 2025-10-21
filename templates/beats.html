@@ -1,106 +1,222 @@
-<!-- templates/vehicledata.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Beats Predictor — Violet Theme</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <title>Beats Predictor</title>
+  <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
   <div class="container">
-    <div class="card">
-      <h1>Beats Classifier</h1>
-      <div class="lead">Form bhar ke "Predict" dabao — result side panel mein dikh jayega.</div>
+    <!-- left: form -->
+    <div class="panel">
+      <div class="header">
+        <div class="logo">B</div>
+        <div class="title">
+          <h1>Beats Predictor</h1>
+          <p>Predict track beat/label from audio attributes — quick & shiny ✨</p>
+        </div>
+      </div>
 
-      <form method="post" action="/" id="beatsForm">
+      <form id="beatsForm">
         <div class="form-grid">
-          <div class="form-row">
+          <div>
             <label for="RhythmScore">Rhythm Score</label>
-            <input type="number" step="any" id="RhythmScore" name="RhythmScore" placeholder="e.g. 0.78" required />
+            <input type="number" id="RhythmScore" name="RhythmScore" step="0.01" min="0" required placeholder="eg. 0.75">
           </div>
 
-          <div class="form-row">
-            <label for="AudioLoudness">Audio Loudness</label>
-            <input type="number" step="any" id="AudioLoudness" name="AudioLoudness" placeholder="-12.3" required />
+          <div>
+            <label for="AudioLoudness">Audio Loudness (dB)</label>
+            <input type="number" id="AudioLoudness" name="AudioLoudness" step="0.01" required placeholder="eg. -12.5">
           </div>
 
-          <div class="form-row">
+          <div>
             <label for="VocalContent">Vocal Content</label>
-            <input type="number" step="any" id="VocalContent" name="VocalContent" placeholder="0 - 1" required />
+            <input type="number" id="VocalContent" name="VocalContent" step="0.01" min="0" max="1" required placeholder="0 - 1">
           </div>
 
-          <div class="form-row">
+          <div>
             <label for="AcousticQuality">Acoustic Quality</label>
-            <input type="number" step="any" id="AcousticQuality" name="AcousticQuality" placeholder="e.g. 0.5" required />
+            <input type="number" id="AcousticQuality" name="AcousticQuality" step="0.01" min="0" max="1" required placeholder="0 - 1">
           </div>
 
-          <div class="form-row">
+          <div>
             <label for="InstrumentalScore">Instrumental Score</label>
-            <input type="number" step="any" id="InstrumentalScore" name="InstrumentalScore" placeholder="e.g. 0.4" required />
+            <input type="number" id="InstrumentalScore" name="InstrumentalScore" step="0.01" required placeholder="eg. 0.42">
           </div>
 
-          <div class="form-row">
+          <div>
             <label for="LivePerformanceLikelihood">Live Performance Likelihood</label>
-            <input type="number" step="any" id="LivePerformanceLikelihood" name="LivePerformanceLikelihood" placeholder="e.g. 0.2" required />
+            <input type="number" id="LivePerformanceLikelihood" name="LivePerformanceLikelihood" step="0.01" min="0" max="1" required placeholder="0 - 1">
           </div>
 
-          <div class="form-row">
+          <div>
             <label for="MoodScore">Mood Score</label>
-            <input type="number" step="any" id="MoodScore" name="MoodScore" placeholder="e.g. 0.6" required />
+            <input type="number" id="MoodScore" name="MoodScore" step="0.01" min="0" max="1" required placeholder="0 - 1">
           </div>
 
-          <div class="form-row">
+          <div>
             <label for="TrackDurationMs">Track Duration (ms)</label>
-            <input type="number" step="any" id="TrackDurationMs" name="TrackDurationMs" placeholder="e.g. 180000" required />
+            <input type="number" id="TrackDurationMs" name="TrackDurationMs" step="1" min="0" required placeholder="eg. 215000">
           </div>
 
-          <div class="form-row full">
+          <div style="grid-column: 1 / -1;">
             <label for="Energy">Energy</label>
-            <input type="number" step="any" id="Energy" name="Energy" placeholder="e.g. 0.9" required />
+            <div class="range-row">
+              <input type="range" id="Energy" name="Energy" min="0" max="1" step="0.01" value="0.5" oninput="energyValue.innerText = this.value">
+              <div class="range-value"><span id="energyValue">0.50</span></div>
+            </div>
+            <div class="helper">Slide to set approximate energy level (0 = low, 1 = high)</div>
           </div>
-
         </div>
 
-        <div style="margin-top:12px;">
-          <button type="submit" class="btn" id="submitBtn">Predict</button>
+        <div class="btn-row">
+          <button type="submit" class="btn primary">Predict</button>
+          <button type="button" id="trainBtn" class="btn train-button">Train Model</button>
+          <button type="reset" class="btn ghost">Reset</button>
         </div>
       </form>
 
-      <div class="footer">Made with 💜 — Violet theme</div>
+      <div class="footer">Tip: accurate numeric inputs give better predictions — use decimals where needed.</div>
     </div>
 
-    <aside class="side">
-      <div id="resultArea">
-        {% if context %}
-          {% if context == "Response-Yes" %}
-            <div class="result-badge result-yes">Yes — Positive</div>
-            <div class="small">Model predicted: <strong>Yes</strong></div>
-            <div class="muted">(If you want to debug, check model logs / print input feature values.)</div>
-          {% elif context == "Response-No" %}
-            <div class="result-badge result-no">No — Negative</div>
-            <div class="small">Model predicted: <strong>No</strong></div>
-            <div class="muted">Try changing feature values and retrain if results seem off.</div>
-          {% else %}
-            <div class="result-badge">{{ context }}</div>
-          {% endif %}
-        {% else %}
-          <div class="result-badge">Awaiting Input</div>
-          <div class="small">Submit values to get prediction.</div>
-          <div class="muted">Tip: Use realistic ranges from your dataset for best results.</div>
-        {% endif %}
+    <!-- right: preview / results -->
+    <aside class="preview">
+      <div class="result-card" id="resultCard">
+        <div class="result-meta">Prediction</div>
+        <div class="result-value" id="resultValue">— submit the form to get a result —</div>
+        <div class="result-meta" id="resultDetails"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="copyBtn" class="btn ghost">Copy</button>
+          <button id="openInNew" class="btn ghost">Open raw response</button>
+        </div>
+      </div>
+
+      <div style="margin-top:8px; color:var(--muted); font-size:13px">
+        <strong>Model status</strong>
+        <div id="modelStatus" class="helper">Unknown — press <em>Train Model</em> to trigger training route.</div>
       </div>
     </aside>
   </div>
 
+  <div id="toast" class="toast"></div>
+
   <script>
-    // small client-side nicety: disable button briefly on submit to avoid double submits
     const form = document.getElementById('beatsForm');
-    const btn = document.getElementById('submitBtn');
-    form.addEventListener('submit', () => {
-      btn.disabled = true;
-      btn.innerText = 'Predicting...';
+    const resultValue = document.getElementById('resultValue');
+    const resultDetails = document.getElementById('resultDetails');
+    const modelStatus = document.getElementById('modelStatus');
+    const toast = document.getElementById('toast');
+    const copyBtn = document.getElementById('copyBtn');
+    const openBtn = document.getElementById('openInNew');
+
+    function showToast(text, time = 3500){
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(()=> toast.classList.remove('show'), time);
+    }
+
+    async function safeTextOrJson(resp){
+      const ct = resp.headers.get('content-type') || '';
+      if (ct.includes('application/json')) {
+        try { return await resp.json(); } catch(e){ return await resp.text(); }
+      } else {
+        return await resp.text();
+      }
+    }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      resultValue.textContent = 'Predicting…';
+      resultDetails.textContent = '';
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Predicting…';
+
+      const fd = new FormData(form);
+      try {
+        const resp = await fetch('/', {
+          method:'POST',
+          body: fd
+        });
+
+        const data = await safeTextOrJson(resp);
+
+        // if JSON object returned with error:
+        if (typeof data === 'object' && data !== null) {
+          if (data.status === false && data.error) {
+            resultValue.textContent = 'Error';
+            resultDetails.textContent = data.error;
+            showToast('Prediction error — check console', 4500);
+            console.error('Prediction error:', data.error);
+          } else {
+            // display whole JSON
+            resultValue.textContent = JSON.stringify(data);
+            resultDetails.textContent = '';
+          }
+        } else {
+          // plain text (most likely your model's single prediction string/number)
+          resultValue.textContent = data;
+          resultDetails.textContent = 'Raw response (text)';
+        }
+      } catch (err){
+        resultValue.textContent = 'Network/Error';
+        resultDetails.textContent = String(err);
+        showToast('Network error — see console', 4500);
+        console.error(err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Predict';
+      }
     });
+
+    // Train button handler
+    document.getElementById('trainBtn').addEventListener('click', async ()=>{
+      const btn = document.getElementById('trainBtn');
+      btn.disabled = true;
+      btn.textContent = 'Training…';
+      showToast('Training started — server-side process running');
+      try {
+        const resp = await fetch('/train');
+        const text = await safeTextOrJson(resp);
+        showToast(typeof text === 'string' ? text : JSON.stringify(text), 6000);
+        modelStatus.textContent = 'Last train response: ' + (typeof text === 'string' ? text : JSON.stringify(text));
+      } catch (err) {
+        showToast('Train request failed');
+        modelStatus.textContent = 'Train request failed';
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Train Model';
+      }
+    });
+
+    // copy button
+    copyBtn.addEventListener('click', ()=>{
+      const txt = resultValue.textContent || '';
+      navigator.clipboard?.writeText(txt).then(()=> showToast('Copied to clipboard')).catch(()=> showToast('Copy failed'));
+    });
+
+    // open raw response (open new tab to POST result not possible) - open / to show index
+    openBtn.addEventListener('click', ()=> {
+      // best we can do: open root (renders template)
+      window.open('/', '_blank');
+    });
+
+    // small initialization
+    (function init(){
+      // if index passed a context from server, Jinja can set a window variable.
+      try {
+        // the server could render a variable named "context" inside template if desired
+        // e.g. templates.TemplateResponse("beats.html", {"request": request, "context": "Rendering"})
+        // we try to read it if server rendered it into a DOM element via a data attribute.
+        const pre = document.querySelector('[data-server-context]');
+        if (pre) {
+          resultValue.textContent = pre.getAttribute('data-server-context');
+        }
+      } catch(e){}
+    })();
   </script>
 </body>
 </html>
